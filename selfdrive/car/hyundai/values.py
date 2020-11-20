@@ -88,7 +88,7 @@ FINGERPRINTS = {
   CAR.GRANDEUR: [{}],
   CAR.GRANDEUR_HEV: [{}],
   # kia
-  CAR.FORTE: [{]},
+  CAR.FORTE: [{}],
   CAR.K5: [{}],
   CAR.K5_HEV: [{}],
   CAR.SPORTAGE: [{}],
