@@ -189,7 +189,7 @@ def calibration_incomplete_alert(CP: car.CarParams, sm: messaging.SubMaster, met
   unit = "km/h" if metric else "mph"
   return Alert(
     "캘리브레이션 진행중입니다 : %d%%" % sm['liveCalibration'].calPerc,
-    "속도를 %d %s 이상으로 주행해주세요" % (speed, unit),
+    "%d %s 이상의 속도로 주행하세요" % (speed, unit),
     AlertStatus.normal, AlertSize.mid,
     Priority.LOWEST, VisualAlert.none, AudibleAlert.chimeCalibration2, 3., 0., .2)
 
@@ -248,15 +248,15 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   EventName.startupNoControl: {
     ET.PERMANENT: Alert(
       "대시캠 모드",
-      "항상 핸들을 잡고 도로를 주시하세요",
+      "안전운전을 위해 항상 핸들을 잡고 도로교통 상황을 주시하세요",
       AlertStatus.normal, AlertSize.mid,
       Priority.LOWER, VisualAlert.none, AudibleAlert.chimeDing, 0.5, 0., 15.),
   },
 
   EventName.startupNoCar: {
     ET.PERMANENT: Alert(
-      "대시캠 모드 : 호환되지않는 차량",
-      "항상 핸들을 잡고 도로를 주시하세요",
+      "대시캠 모드: 지원되지 않는 차량",
+      "안전운전을 위해 항상 핸들을 잡고 도로교통 상황을 주시하세요",
       AlertStatus.normal, AlertSize.mid,
       Priority.LOWER, VisualAlert.none, AudibleAlert.chimeError, 0.5, 0., 15.),
   },
@@ -273,7 +273,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
     # LOW priority to overcome Cruise Error
     ET.PERMANENT: Alert(
       "커뮤니티 기능 감지됨",
-      "개발자설정에서 커뮤니티 기능을 활성화해주세요",
+      "개발자설정에서 커뮤니티 기능을 활성화하세요",
       AlertStatus.normal, AlertSize.mid,
       Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .2),
   },
@@ -313,7 +313,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   EventName.ldw: {
     ET.PERMANENT: Alert(
       "핸들을 잡아주세요",
-      "차선이탈 감지됨",
+      "차선이탈이 감지되었습니다",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimeLaneDeparture, 5., 2., 3.),
   },
@@ -322,7 +322,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
 
   EventName.gasPressed: {
     ET.PRE_ENABLE: Alert(
-      "가속패달감지시 오픈파일럿은 브레이크를 사용하지않습니다",
+      "가속패달감지시 오픈파일럿은 브레이크를 사용할 수 없습니다.",
       "",
       AlertStatus.normal, AlertSize.small,
       Priority.LOWEST, VisualAlert.none, AudibleAlert.none, .0, .0, .1, creation_delay=1.),
@@ -339,14 +339,14 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   EventName.steerTempUnavailableMute: {
     ET.WARNING: Alert(
       "핸들을 잡아주세요",
-      "조향제어 일시적으로 사용불가",
+      "조향제어가 일시적으로 비활성화 되었습니다",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.LOW, VisualAlert.none, AudibleAlert.none, .2, .2, .2),
   },
 
   EventName.preDriverDistracted: {
     ET.WARNING: Alert(
-      "도로를 주시하세요 : 운전자 도로주시 불안",
+      "도로상황에 주의를 기울이세요",
       "",
       AlertStatus.normal, AlertSize.small,
       Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimeDistracted, 3., .1, .1),
@@ -355,47 +355,47 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   EventName.promptDriverDistracted: {
     ET.WARNING: Alert(
       "도로를 주시하세요",
-      "운전자 도로주시 불안",
+      "전방 주시 필요",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.MID, VisualAlert.steerRequired, AudibleAlert.chimeRoadWarning, 5., .1, .1),
   },
 
   EventName.driverDistracted: {
     ET.WARNING: Alert(
-      "조향제어가 강제로 해제됩니다",
-      "운전자 도로주시 불안",
+      "경고: 조향제어가 강제 해제됩니다",
+      "운전자 전방주시 불안",
       AlertStatus.critical, AlertSize.full,
       Priority.HIGH, VisualAlert.steerRequired, AudibleAlert.chimeWarningRepeat, .1, .1, .1),
   },
 
   EventName.preDriverUnresponsive: {
     ET.WARNING: Alert(
-      "핸들을 잡아주세요 : 운전자 인식 불가",
+      "핸들을 터치하세요: 모니터링 없음",
       "",
       AlertStatus.normal, AlertSize.small,
-      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.none, .0, .1, .1, alert_rate=0.75),
+      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimeDing, .5, .1, .1,),
   },
 
   EventName.promptDriverUnresponsive: {
     ET.WARNING: Alert(
-      "핸들을 잡아주세요",
-      "운전자 응답하지않음",
+      "핸들을 터치하세요",
+      "운전자 모니터링 없음",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.MID, VisualAlert.steerRequired, AudibleAlert.chimeWarning2Repeat, .1, .1, .1),
   },
 
   EventName.driverUnresponsive: {
     ET.WARNING: Alert(
-      "조향제어가 강제로 해제됩니다",
-      "운전자 응답하지않음",
+      "경고: 조향제어가 즉시 해제됩니다",
+      "운전자 모니터링 없음",
       AlertStatus.critical, AlertSize.full,
       Priority.HIGH, VisualAlert.steerRequired, AudibleAlert.chimeWarningRepeat, .1, .1, .1),
   },
 
   EventName.driverMonitorLowAcc: {
     ET.WARNING: Alert(
-      "운전자 모니터링 확인",
-      "운전자 모니터링 상태가 비정상입니다",
+      "운전자 얼굴 확인 중",
+      "운전자 얼굴 인식이 원할하지 않습니다",
       AlertStatus.normal, AlertSize.mid,
       Priority.LOW, VisualAlert.steerRequired, AudibleAlert.none, .4, 0., 1.5),
   },
@@ -403,7 +403,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   EventName.manualRestart: {
     ET.WARNING: Alert(
       "핸들을 잡아주세요",
-      "수동으로 재활성화하세요",
+      "수동으로 재출발 하세요",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .2),
   },
@@ -411,7 +411,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   EventName.resumeRequired: {
     ET.WARNING: Alert(
       "앞차량 멈춤",
-      "이동하려면 RES버튼을 누르세요",
+      "재출발을 위해 RES버튼을 누르세요",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.LOW, VisualAlert.none, AudibleAlert.chimeDing, 0.5, 0., .2),
   },
@@ -439,7 +439,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   EventName.laneChangeBlocked: {
     ET.WARNING: Alert(
       "후측방 차량감지",
-      "차선에 차량이 감지되니 대기하세요",
+      "다른 차량에 주의하세요",
       AlertStatus.normal, AlertSize.mid,
       Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimeWarning1, .5, .1, .1),
   },
@@ -447,7 +447,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   EventName.laneChange: {
     ET.WARNING: Alert(
       "차선을 변경합니다",
-      "차량 주위를 확인하세요",
+      "다른 차량을 하세요",
       AlertStatus.normal, AlertSize.mid,
       Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimeLaneChange, 4., .1, .1),
   },
@@ -508,17 +508,17 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   },
 
   EventName.brakeHold: {
-    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeDisengage),
+    ET.USER_DISABLE: EngagementAlert(AudibleAlert.none),
     ET.NO_ENTRY: NoEntryAlert("브레이크 감지됨"),
   },
 
   EventName.parkBrake: {
-    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeDisengage),
+    ET.USER_DISABLE: EngagementAlert(AudibleAlert.none),
     ET.NO_ENTRY: NoEntryAlert("주차 브레이크를 해제하세요"),
   },
 
   EventName.pedalPressed: {
-    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeDisengage),
+    ET.USER_DISABLE: EngagementAlert(AudibleAlert.none),
     ET.NO_ENTRY: NoEntryAlert("브레이크 감지됨",
                               visual_alert=VisualAlert.brakePressed),
   },
@@ -529,7 +529,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   },
 
   EventName.wrongCruiseMode: {
-    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeDisengage),
+    ET.USER_DISABLE: EngagementAlert(AudibleAlert.none),
     ET.NO_ENTRY: NoEntryAlert("어뎁티브크루즈를 활성화하세요"),
   },
 
@@ -719,7 +719,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
       "기어 [R] 상태",
       "차량 후방을 확인하세요",
       AlertStatus.normal, AlertSize.full,
-      Priority.LOWEST, VisualAlert.none, AudibleAlert.chimeDing, 0.5, 0., .2, creation_delay=0.5),
+      Priority.LOWEST, VisualAlert.none, AudibleAlert.chimeDing, 0.5, 0., .2, creation_delay=0.2),
     ET.SOFT_DISABLE: SoftDisableAlert("기어 [R] 상태"),
     ET.NO_ENTRY: NoEntryAlert("기어 [R] 상태"),
   },
