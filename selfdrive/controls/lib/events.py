@@ -524,7 +524,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   },
 
   EventName.wrongCarMode: {
-    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeError),
+    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeDisengage),
     ET.NO_ENTRY: wrong_car_mode_alert,
   },
 
