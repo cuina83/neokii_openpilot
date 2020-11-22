@@ -55,16 +55,25 @@
 #define COLOR_BLACK_ALPHA(x) nvgRGBA(0, 0, 0, x)
 #define COLOR_WHITE nvgRGBA(255, 255, 255, 255)
 #define COLOR_WHITE_ALPHA(x) nvgRGBA(255, 255, 255, x)
-#define COLOR_YELLOW nvgRGBA(218, 202, 37, 255)
-#define COLOR_RED nvgRGBA(201, 34, 49, 255)
-#define COLOR_OCHRE nvgRGBA(218, 111, 37, 255)
-#define COLOR_OCHRE_ALPHA(x) nvgRGBA(218, 111, 37, x)
 #define COLOR_GREEN nvgRGBA(0, 255, 0, 255)
 #define COLOR_GREEN_ALPHA(x) nvgRGBA(0, 255, 0, x)
-#define COLOR_ORANGE nvgRGBA(255, 175, 3, 255)
-#define COLOR_ORANGE_ALPHA(x) nvgRGBA(255, 175, 3, x)
-#define COLOR_RED_ALPHA(x) nvgRGBA(201, 34, 49, x)
-#define COLOR_YELLOW_ALPHA(x) nvgRGBA(218, 202, 37, x)
+#define COLOR_ORANGE nvgRGBA(255, 165, 0, 255)
+#define COLOR_ORANGE_ALPHA(x) nvgRGBA(255, 165, 0, x)
+#define COLOR_RED nvgRGBA(255, 0, 0, 255)
+#define COLOR_RED_ALPHA(x) nvgRGBA(255, 0, 0, x)
+#define COLOR_YELLOW nvgRGBA(255, 255, 0, 255)
+#define COLOR_YELLOW_ALPHA(x) nvgRGBA(255, 255, 0, x)
+#define COLOR_ENGAGED nvgRGBA(23, 134, 68, 255)
+#define COLOR_ENGAGED_ALPHA(x) nvgRGBA(23, 134, 68, x)
+#define COLOR_WARNING nvgRGBA(218, 111, 37, 255)
+#define COLOR_WARNING_ALPHA(x) nvgRGBA(218, 111, 37, x)
+#define COLOR_ENGAGEABLE nvgRGBA(23, 51, 73, 255)
+#define COLOR_ENGAGEABLE_ALPHA(x) nvgRGBA(23, 51, 73, x)
+
+#define COLOR_PUREBLUE nvgRGBA(0, 191, 255, 255)
+#define COLOR_PUREBLUE_ALPHA(x) nvgRGBA(0, 191, 255, x)
+#define COLOR_DARKBLUE nvgRGBA(0, 95, 128, 255)
+#define COLOR_DARKBLUE_ALPHA(x) nvgRGBA(0, 95, 128, x)
 
 #define UI_BUF_COUNT 4
 
@@ -80,10 +89,7 @@ typedef struct Rect {
 
 const int sbr_w = 300;
 const int bdr_s = 30;
-const int vwp_h = 1080;
 const int header_h = 420;
-const int footer_h = 280;
-const int footer_y = vwp_h-bdr_s-footer_h;
 const Rect settings_btn = {50, 35, 200, 117};
 const Rect home_btn = {60, 1080 - 180 - 40, 180, 180};
 
@@ -140,16 +146,14 @@ typedef struct UIScene {
 
   std::string alert_text1;
   std::string alert_text2;
-  std::string alertTextMsg1;
-  std::string alertTextMsg2;
   std::string alert_type;
   cereal::ControlsState::AlertSize alert_size;
 
-  float tpmsPressureFl;
-  float tpmsPressureFr;
-  float tpmsPressureRl;
-  float tpmsPressureRr;
-  int lateralControlMethod;
+  float tpmsFl;
+  float tpmsFr;
+  float tpmsRl;
+  float tpmsRr;
+  
   float radarDistance;
 
   cereal::HealthData::HwType hwType;
@@ -162,7 +166,6 @@ typedef struct UIScene {
   cereal::DriverState::Reader driver_state;
   cereal::DMonitoringState::Reader dmonitoring_state;
   cereal::ModelDataV2::Reader model;
-  cereal::CarState::GearShifter getGearShifter;
   line path;
   line outer_left_lane_line;
   line left_lane_line;
