@@ -299,15 +299,6 @@ static void ui_draw_world(UIState *s) {
   nvgRestore(s->vg);
 }
 
-static void bb_ui_draw_UI(UIState *s)
-{
-  const int bb_dmr_w = 180;
-  const int bb_dmr_x = 1920 - bb_dmr_w - bdr_add;
-  const int bb_dmr_y = (s->scene.viz_rect.y + bdr_add) + 190;
-
-  bb_ui_draw_measures_right(s, bb_dmr_x, bb_dmr_y, bb_dmr_w);
-}
-
 static void bb_ui_draw_tpms(UIState *s) {
   char tpmsFl[32];
   char tpmsFr[32];
@@ -397,10 +388,7 @@ static void bb_ui_draw_tpms(UIState *s) {
   }
 }
 
-static void ui_draw_vision_footer(UIState *s) {
-  bb_ui_draw_UI(s);
-  bb_ui_draw_tpms(s);
-}
+static void bb_ui_draw_tpms(UIState *s);
 
 static int bb_ui_draw_measure(UIState *s,  const char* bb_value, const char* bb_uom, const char* bb_label,
     int bb_x, int bb_y, int bb_uom_dx,
