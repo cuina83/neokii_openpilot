@@ -80,8 +80,10 @@ typedef struct Rect {
 
 const int sbr_w = 300;
 const int bdr_s = 30;
+const int vwp_h = 1080;
 const int header_h = 420;
 const int footer_h = 280;
+const int footer_y = vwp_h-bdr_s-footer_h;
 const Rect settings_btn = {50, 35, 200, 117};
 const Rect home_btn = {60, 1080 - 180 - 40, 180, 180};
 
@@ -123,6 +125,9 @@ typedef struct {
 
 typedef struct UIScene {
 
+  float mpc_x[50];
+  float mpc_y[50];
+
   mat4 extrinsic_matrix;      // Last row is 0 so we can use mat4.
   bool world_objects_visible;
 
@@ -135,6 +140,8 @@ typedef struct UIScene {
 
   std::string alert_text1;
   std::string alert_text2;
+  std::string alertTextMsg1;
+  std::string alertTextMsg2;
   std::string alert_type;
   cereal::ControlsState::AlertSize alert_size;
 
@@ -142,6 +149,8 @@ typedef struct UIScene {
   float tpmsPressureFr;
   float tpmsPressureRl;
   float tpmsPressureRr;
+  int lateralControlMethod;
+  float radarDistance;
 
   cereal::HealthData::HwType hwType;
   int satelliteCount;
@@ -153,6 +162,7 @@ typedef struct UIScene {
   cereal::DriverState::Reader driver_state;
   cereal::DMonitoringState::Reader dmonitoring_state;
   cereal::ModelDataV2::Reader model;
+  cereal::CarState::GearShifter getGearShifter;
   line path;
   line outer_left_lane_line;
   line left_lane_line;
