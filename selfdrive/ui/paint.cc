@@ -388,7 +388,9 @@ static void bb_ui_draw_tpms(UIState *s) {
   }
 }
 
-static void bb_ui_draw_tpms(UIState *s)
+static void ui_draw_vision_footer(UIState *s) {
+  bb_ui_draw_tpms(s);
+}
 
 static int bb_ui_draw_measure(UIState *s,  const char* bb_value, const char* bb_uom, const char* bb_label,
     int bb_x, int bb_y, int bb_uom_dx,
