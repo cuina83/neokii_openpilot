@@ -27,7 +27,7 @@ int write_param_float(float param, const char* param_name, bool persistent_param
 void ui_init(UIState *s) {
   s->sm = new SubMaster({"modelV2", "controlsState", "uiLayoutState", "liveCalibration", "radarState", "thermal",
                          "health", "carParams", "ubloxGnss", "driverState", "dMonitoringState", "sensorEvents",
-						 "carState", "pathPlan", "gpsLocationExternal"/*, "liveMpc"*/});
+						 "carState", "pathPlan", "gpsLocationExternal", "liveMpc"});
 
   s->started = false;
   s->status = STATUS_OFFROAD;
@@ -166,7 +166,12 @@ void update_sockets(UIState *s) {
 
   if (sm.updated("carState"))
    {
-    scene.car_state = sm["carState"].getCarState();
+     auto data = sm["carState"].getCarState();
+    //scene.car_state = sm["carState"].getCarState();
+    scene.tpmsPressureFl = data.getTpmsPressureFl();
+    scene.tpmsPressureFr = data.getTpmsPressureFr();
+    scene.tpmsPressureRl = data.getTpmsPressureRl();
+    scene.tpmsPressureRr = data.getTpmsPressureRr();
    }
 
    /*if (sm.updated("carControl"))
@@ -196,7 +201,7 @@ void update_sockets(UIState *s) {
       scene.gpsAccuracy = 99.8;
    }
 
-   /*if(sm.updated("liveMpc")) {
+   if(sm.updated("liveMpc")) {
 
     auto data = sm["liveMpc"].getLiveMpc();
     auto x_list = data.getX();
@@ -205,7 +210,7 @@ void update_sockets(UIState *s) {
        scene.mpc_x[i] = x_list[i];
        scene.mpc_y[i] = y_list[i];
     }
-  }*/
+  }
 
   if (sm.updated("radarState")) {
     auto data = sm["radarState"].getRadarState();
