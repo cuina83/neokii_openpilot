@@ -164,28 +164,26 @@ void update_sockets(UIState *s) {
     }
   }
 
-  if (sm.updated("carState"))
-   {
-     auto data = sm["carState"].getCarState();
+  if (sm.updated("carState")) {
+    auto data = sm["carState"].getCarState();
     //scene.car_state = sm["carState"].getCarState();
-    scene.tpmsFl = data.getTpmsFl();
-    scene.tpmsFr = data.getTpmsFr();
-    scene.tpmsRl = data.getTpmsRl();
-    scene.tpmsRr = data.getTpmsRr();
-   }
+    scene.tpmsPressureFl = data.getTpmsPressureFl();
+    scene.tpmsPressureFr = data.getTpmsPressureFr();
+    scene.tpmsPressureRl = data.getTpmsPressureRl();
+    scene.tpmsPressureRr = data.getTpmsPressureRr();;
+  }
 
    /*if (sm.updated("carControl"))
    {
     scene.car_control = sm["carControl"].getCarControl();
    }*/
 
-   if (sm.updated("pathPlan"))
+  if (sm.updated("pathPlan"))
    {
     scene.path_plan = sm["pathPlan"].getPathPlan();
-   }
+  }
 
-   if (sm.updated("gpsLocationExternal"))
-   {
+  if (sm.updated("gpsLocationExternal")) {
     auto data = sm["gpsLocationExternal"].getGpsLocationExternal();
 
     float verticalAccuracy = data.getVerticalAccuracy();
@@ -199,7 +197,7 @@ void update_sockets(UIState *s) {
       scene.gpsAccuracy = 99.99;
     else if (scene.gpsAccuracy == 0)
       scene.gpsAccuracy = 99.8;
-   }
+  }
 
    /*if(sm.updated("liveMpc")) {
 

@@ -150,10 +150,10 @@ typedef struct UIScene {
   std::string alert_type;
   cereal::ControlsState::AlertSize alert_size;
 
-  float tpmsFl;
-  float tpmsFr;
-  float tpmsRl;
-  float tpmsRr;
+  float tpmsPressureFl;
+  float tpmsPressureFr;
+  float tpmsPressureRl;
+  float tpmsPressureRr;
   
   float radarDistance;
 
