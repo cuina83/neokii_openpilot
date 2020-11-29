@@ -170,7 +170,8 @@ void update_sockets(UIState *s) {
     scene.tpmsPressureFl = data.getTpmsPressureFl();
     scene.tpmsPressureFr = data.getTpmsPressureFr();
     scene.tpmsPressureRl = data.getTpmsPressureRl();
-    scene.tpmsPressureRr = data.getTpmsPressureRr();;
+    scene.tpmsPressureRr = data.getTpmsPressureRr();
+    scene.radarDistance = data.getRadarDistance();
   }
 
    /*if (sm.updated("carControl"))
