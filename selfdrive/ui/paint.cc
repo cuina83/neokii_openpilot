@@ -81,7 +81,18 @@ static void draw_chevron(UIState *s, float x_in, float y_in, float sz,
                           NVGcolor fillColor, NVGcolor glowColor) {
   float x, y;
   if (!car_space_to_full_frame(s, x_in, y_in, 0.0, &x, &y)) {
+<<<<<<< Updated upstream
     return;
+=======
+    return; //opkr
+  /*const vec4 p_car_space = (vec4){{x_in, y_in, 0., 1.}};
+  const vec3 p_full_frame = car_space_to_full_frame(s, p_car_space);
+
+  float x = p_full_frame.v[0];
+  float y = p_full_frame.v[1];
+  if (x < 0 || y < 0.){
+    return;*/
+>>>>>>> Stashed changes
   }
 
   sz *= 30;
