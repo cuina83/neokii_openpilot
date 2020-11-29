@@ -81,9 +81,6 @@ static void draw_chevron(UIState *s, float x_in, float y_in, float sz,
                           NVGcolor fillColor, NVGcolor glowColor) {
   float x, y;
   if (!car_space_to_full_frame(s, x_in, y_in, 0.0, &x, &y)) {
-<<<<<<< Updated upstream
-    return;
-=======
     return; //opkr
   /*const vec4 p_car_space = (vec4){{x_in, y_in, 0., 1.}};
   const vec3 p_full_frame = car_space_to_full_frame(s, p_car_space);
@@ -92,7 +89,6 @@ static void draw_chevron(UIState *s, float x_in, float y_in, float sz,
   float y = p_full_frame.v[1];
   if (x < 0 || y < 0.){
     return;*/
->>>>>>> Stashed changes
   }
 
   sz *= 30;
@@ -150,7 +146,12 @@ static void draw_lead(UIState *s, const cereal::RadarState::LeadData::Reader &le
     }
     fillAlpha = (int)(fmin(fillAlpha, 255));
   }
-  draw_chevron(s, d_rel, lead.getYRel(), 25, nvgRGBA(201, 34, 49, fillAlpha), COLOR_YELLOW);
+  if (scene->radarDistance < 149) {
+    draw_chevron(s, d_rel, lead.getYRel(), 25, nvgRGBA(201, 34, 49, fillAlpha), COLOR_YELLOW);  //차량 레이더가 앞차를 인식한 상태
+  } else {
+    draw_chevron(s, d_rel, lead.getYRel(), 25, nvgRGBA(165, 255, 135, fillAlpha), COLOR_GREEN);  //차량 레이더가 앞차를 인식하지 못한 상태
+  }//opkr
+  //draw_chevron(s, d_rel, lead.getYRel(), 25, nvgRGBA(201, 34, 49, fillAlpha), COLOR_YELLOW);
 }
 
 static void ui_draw_line(UIState *s, const vertex_data *v, const int cnt, NVGcolor *color, NVGpaint *paint) {
