@@ -137,7 +137,7 @@ typedef struct UIScene {
   std::string alert_text2;
   std::string alert_type;
   cereal::ControlsState::AlertSize alert_size;
-  bool  brakePress;
+  bool brakePress;
   bool brakeLights;
 
   cereal::HealthData::HwType hwType;
