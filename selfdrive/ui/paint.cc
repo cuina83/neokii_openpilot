@@ -884,7 +884,7 @@ static void ui_draw_vision_maxspeed(UIState *s) {
 
     ui_draw_text(s->vg, text_x, 242, "N/A", 42 * 2.5, COLOR_WHITE_ALPHA(100), s->font_sans_semibold);
   }
-
+  ui_draw_debug(s);
 }
 
 static void ui_draw_vision_speed(UIState *s) {
