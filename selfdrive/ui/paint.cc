@@ -904,6 +904,9 @@ static void ui_draw_vision_speed(UIState *s) {
   if( scene->brakePress ) val_color = COLOR_RED;
   else if( scene->brakeLights ) val_color = nvgRGBA(201, 34, 49, 100);
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
+
+  snprintf(speed_str, sizeof(speed_str), "%d", (int)speed);
+  ui_draw_text(s->vg, viz_rect.centerX(), 240, speed_str, 96*2.5, val_color, s->font_sans_bold);
   ui_draw_text(s->vg, viz_rect.centerX(), 320, s->is_metric?"km/h":"mph", 36*2.5, COLOR_WHITE_ALPHA(200), s->font_sans_regular);
 }
 
