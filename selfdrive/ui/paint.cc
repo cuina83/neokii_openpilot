@@ -987,7 +987,7 @@ static void ui_draw_driver_view(UIState *s) {
   ui_draw_circle_image(s->vg, x, y, face_size, s->img_face, scene->dmonitoring_state.getFaceDetected());
 }
 
-static void ui_draw_vision_brake(UIState *s) {
+/*static void ui_draw_vision_brake(UIState *s) {
   const UIScene *scene = &s->scene;
   const int brake_size = 96;
   const int brake_x = (s->scene.viz_rect.x + (brake_size * 4) + (bdr_is * 4));
@@ -1012,7 +1012,7 @@ static void ui_draw_vision_brake(UIState *s) {
   nvgRect(s->vg, brake_img_x, brake_img_y, brake_img_size, brake_img_size);
   nvgFillPaint(s->vg, brake_img);
   nvgFill(s->vg);
-}
+}*/
 
 static void ui_draw_vision_header(UIState *s) {
   const Rect &viz_rect = s->scene.viz_rect;
@@ -1033,9 +1033,9 @@ static void ui_draw_vision_header(UIState *s) {
 static void ui_draw_vision_footer(UIState *s) {
   ui_draw_vision_face(s);
 
-#if UI_FEATURE_BRAKE
+/*#if UI_FEATURE_BRAKE
   ui_draw_vision_brake(s);
-#endif
+#endif*/
 }
 
 void ui_draw_vision_alert(UIState *s, cereal::ControlsState::AlertSize va_size, UIStatus va_color,
