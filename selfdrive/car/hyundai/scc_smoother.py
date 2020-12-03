@@ -133,8 +133,6 @@ class SccSmoother:
 
     clu11_speed = CS.clu11["CF_Clu_Vanz"]
 
-    #self.cal_max_speed(frame, CC, CS, sm, clu11_speed)
-
     if self.dispatch_cancel_buttons(CC, CS):
       return
 
