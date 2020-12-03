@@ -123,6 +123,8 @@ void update_sockets(UIState *s) {
     auto event = sm["controlsState"];
     scene.controls_state = event.getControlsState();
 
+    s->scene.curvature = scene.controls_state.getCurvature();
+
     // TODO: the alert stuff shouldn't be handled here
     auto alert_sound = scene.controls_state.getAlertSound();
     if (scene.alert_type.compare(scene.controls_state.getAlertType()) != 0) {

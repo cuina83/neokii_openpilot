@@ -159,6 +159,8 @@ typedef struct UIScene {
   float lane_line_probs[4];
   float road_edge_stds[2];
 
+  float curvature;
+
   //tpms
   float tpmsPressureFl;
   float tpmsPressureFr;
@@ -175,6 +177,23 @@ typedef struct UIScene {
   float gpsAltitude;
 
   bool recording;
+
+  struct _PathPlan
+  {
+    float laneWidth;
+    float steerRatio;
+    float steerActuatorDelay;
+    float steerRateCost;
+
+    float cProb;
+    float lProb;
+    float rProb;
+
+    float angleOffset;
+
+    float lPoly;
+    float rPoly;
+  } pathPlan;
 } UIScene;
 
 typedef struct {

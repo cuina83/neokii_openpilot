@@ -50,6 +50,16 @@ const mat3 intrinsic_matrix = (mat3){{
 }};
 #endif
 
+static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
+{
+  char* msg_buf = NULL;
+  va_list args;
+  va_start(args, fmt);
+  vasprintf( &msg_buf, fmt, args);
+  va_end(args);
+  nvgText(s->vg, x, y, msg_buf, NULL);
+}
+
 // Projects a point in car to space to the corresponding point in full frame
 // image space.
 bool car_space_to_full_frame(const UIState *s, float in_x, float in_y, float in_z, float *out_x, float *out_y) {
@@ -349,7 +359,7 @@ static void ui_draw_tpms(UIState *s) {
 
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
   const int pos_x = viz_tpms_x + (viz_tpms_w / 2);
-  ui_draw_text(s->vg, pos_x, 120, "TPMS", 55, COLOR_WHITE_ALPHA(200), s->font_sans_bold);
+  ui_draw_text(s->vg, pos_x, 120, "TPMS", 60, COLOR_ORANGE_ALPHA(200), s->font_sans_bold);
   snprintf(tpmsFl, sizeof(tpmsFl), "%.1f", s->scene.tpmsPressureFl);
   snprintf(tpmsFr, sizeof(tpmsFr), "%.1f", s->scene.tpmsPressureFr);
   snprintf(tpmsRl, sizeof(tpmsRl), "%.1f", s->scene.tpmsPressureRl);
@@ -382,6 +392,30 @@ static void ui_draw_tpms(UIState *s) {
   } else {
     ui_draw_text(s->vg, pos_x+55, 220, tpmsRr, 60, COLOR_WHITE_ALPHA(200), s->font_sans_semibold);
   }
+}
+
+static void ui_draw_debug(UIState *s) 
+{
+  UIScene &scene = s->scene;
+
+  int ui_viz_rx = scene.viz_rect.x + 300;
+  int ui_viz_ry = 108;
+  int ui_viz_rx_center = scene.viz_rect.centerX();
+  
+  nvgFontSize(s->vg, 70);
+  nvgFontFace(s->vg, "sans-semibold");
+  nvgFillColor(s->vg, COLOR_WHITE_ALPHA(200));
+  nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+  ui_print(s, ui_viz_rx_center, ui_viz_ry+650, "커브");
+  if (scene.curvature >= 0.001) {
+    ui_print(s, ui_viz_rx_center, ui_viz_ry+700, "↖%.4f　", abs(scene.curvature));
+  } else if (scene.curvature <= -0.001) {
+    ui_print(s, ui_viz_rx_center, ui_viz_ry+700, "　%.4f↗", abs(scene.curvature));
+  } else {
+    ui_print(s, ui_viz_rx_center, ui_viz_ry+700, "　%.4f　", abs(scene.curvature));
+  }
+  ui_print(s, ui_viz_rx_center, ui_viz_ry+750, " 좌측간격(m)       차선폭(m)       우측간격(m)");
+  ui_print(s, ui_viz_rx_center, ui_viz_ry+800, "%.2f                       %.2f                       %.2f", scene.pathPlan.lPoly, scene.pathPlan.laneWidth, abs(scene.pathPlan.rPoly));
 }
 
 static int bb_ui_draw_measure(UIState *s,  const char* bb_value, const char* bb_uom, const char* bb_label,
@@ -764,60 +798,7 @@ static void bb_ui_draw_debug(UIState *s)
 
     ui_draw_text(s->vg, text_x, y, str, 20 * 2.5, COLOR_WHITE_ALPHA(200), s->font_sans_regular);
 #endif
-    /*
 
-    int w = 184;
-    int x = (s->scene.viz_rect.x + (bdr_s*2)) + 220;
-    int y = 100;
-    int xo = 180;
-    int height = 70;
-
-    nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
-    const int text_x = x + (xo / 2) + (w / 2);
-
-    char str[1024];
-
-    auto lqr = scene->controls_state.getLateralControlState().getLqrState();
-
-    snprintf(str, sizeof(str), "I: %.3f", lqr.getI());
-    ui_draw_text(s->vg, text_x, y, str, 25 * 2.5, COLOR_WHITE_ALPHA(200), s->font_sans_regular);
-
-    y += height;
-    snprintf(str, sizeof(str), "LQR: %.3f", lqr.getLqrOutput());
-    ui_draw_text(s->vg, text_x, y, str, 25 * 2.5, COLOR_WHITE_ALPHA(200), s->font_sans_regular);
-
-    y += height;
-    snprintf(str, sizeof(str), "O: %.3f, %.0f", lqr.getOutput(), scene->controls_state.getApplySteer());
-    ui_draw_text(s->vg, text_x, y, str, 25 * 2.5, COLOR_WHITE_ALPHA(200), s->font_sans_regular);*/
-
-    //y += height;
-    //snprintf(str, sizeof(str), "ST: %.3f", scene->car_state.getSteeringTorque());
-    //ui_draw_text(s->vg, text_x, y, str, 25 * 2.5, COLOR_WHITE_ALPHA(200), s->font_sans_regular);
-
-    //y += height;
-    //snprintf(str, sizeof(str), "CURV: %.3f", scene->pCurvature * 1000.);
-    //ui_draw_text(s->vg, text_x, y, str, 25 * 2.5, COLOR_WHITE_ALPHA(200), s->font_sans_regular);
-
-    //y += height;
-    //snprintf(str, sizeof(str), "Angle: %.3f, %.3f", scene->liveParams.getAngleOffset(),
-    //        scene->liveParams.getAngleOffsetAverage());
-    //ui_draw_text(s->vg, text_x, y, str, 25 * 2.5, COLOR_WHITE_ALPHA(200), s->font_sans_regular);
-
-    /*y += height;
-    snprintf(str, sizeof(str), "S Rate: %.2f", scene->path_plan.getSteerRatio());
-    ui_draw_text(s->vg, text_x, y, str, 25 * 2.5, COLOR_WHITE_ALPHA(200), s->font_sans_regular);
-
-    y += height;
-    snprintf(str, sizeof(str), "S R Cost: %.2f", scene->path_plan.getSteerRateCost());
-    ui_draw_text(s->vg, text_x, y, str, 25 * 2.5, COLOR_WHITE_ALPHA(200), s->font_sans_regular);
-
-    y += height;
-    snprintf(str, sizeof(str), "S A Delay: %.2f", scene->path_plan.getSteerActuatorDelay());
-    ui_draw_text(s->vg, text_x, y, str, 25 * 2.5, COLOR_WHITE_ALPHA(200), s->font_sans_regular);
-
-    y += height;
-    snprintf(str, sizeof(str), "Lane: %.2f, %.2f", scene->path_plan.getLProb(), scene->path_plan.getRProb());
-    ui_draw_text(s->vg, text_x, y, str, 25 * 2.5, COLOR_WHITE_ALPHA(200), s->font_sans_regular);*/
 }
 
 
@@ -943,6 +924,7 @@ static void ui_draw_vision_event(UIState *s) {
 
     ui_draw_circle_image(s->vg, bg_wheel_x, bg_wheel_y, bg_wheel_size, s->img_wheel, color, 1.0f, bg_wheel_y - 25);
   }
+  ui_draw_debug(s);
 }
 
 static void ui_draw_vision_face(UIState *s) {
