@@ -7,12 +7,12 @@ from selfdrive.car.hyundai.interface import ButtonType
 from selfdrive.config import Conversions as CV, RADAR_TO_CAMERA
 from selfdrive.car.hyundai.values import Buttons
 from common.params import Params
+from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX, V_CRUISE_MIN, V_CRUISE_DELTA_KM, V_CRUISE_DELTA_MI
 from selfdrive.road_speed_limiter import road_speed_limiter_get_max_speed
 
 # do not modify
-V_CRUISE_DELTA_MI = 5 * CV.MPH_TO_KPH
-V_CRUISE_DELTA_KM = 10
-MIN_SET_SPEED = 30
+MIN_SET_SPEED = V_CRUISE_MIN
+MAX_SET_SPEED = V_CRUISE_MAX
 
 ALIVE_COUNT_MIN = 6
 ALIVE_COUNT_MAX = 8
@@ -66,8 +66,8 @@ class SccSmoother:
     self.scc_smoother_enabled = Params().get('SccSmootherEnabled') == b'1'
     self.slow_on_curves = Params().get('SccSmootherSlowOnCurves') == b'1'
 
-    self.sync_set_speed_while_gas_pressed = True
-  
+    self.sync_set_speed_while_gas_pressed = False
+
   def reset(self):
     self.accel_buf = []
     self.max_set_speed_buf = []
@@ -157,13 +157,13 @@ class SccSmoother:
     if CS.gas_pressed:
       self.target_speed = clu11_speed
       if clu11_speed > controls.cruiseOpMaxSpeed and self.sync_set_speed_while_gas_pressed:
-        CC.cruiseOpMaxSpeed = controls.cruiseOpMaxSpeed = controls.v_cruise_kph = clu11_speed
+        set_speed = clip(clu11_speed, MIN_SET_SPEED, MAX_SET_SPEED)
+        CC.cruiseOpMaxSpeed = controls.cruiseOpMaxSpeed = controls.v_cruise_kph = set_speed
     else:
       self.target_speed = clu11_speed + accel
 
-    self.target_speed = clip(self.target_speed, MIN_SET_SPEED, self.max_set_speed)
-    
     self.cal_max_speed(frame, CC, CS, controls.sm, clu11_speed)
+    self.target_speed = clip(self.target_speed, MIN_SET_SPEED, self.max_set_speed)
 
     CC.sccSmoother.logMessage = '{:.2f}/{:.2f}, {:.2f}, {:.1f}/{:d}, btn:{:d}' \
       .format(float(apply_accel * CV.MS_TO_KPH), float(override_acc), float(accel), float(self.target_speed),
@@ -340,8 +340,6 @@ class SccSmoother:
         elif ButtonPrev == ButtonType.decelCruise:
           v_cruise_kph -= V_CRUISE_DELTA - -v_cruise_kph % V_CRUISE_DELTA
         ButtonCnt %= 70
-      v_cruise_kph = clip(v_cruise_kph, MIN_SET_SPEED, 144)
+      v_cruise_kph = clip(v_cruise_kph, MIN_SET_SPEED, MAX_SET_SPEED)
 
     return v_cruise_kph
-
-
