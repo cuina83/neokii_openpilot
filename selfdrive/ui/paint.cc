@@ -17,6 +17,7 @@ extern "C"{
 
 #include "paint.hpp"
 #include "sidebar.hpp"
+#include "extras.h"
 
 #ifdef QCOM2
 const int vwp_w = 2160;
@@ -1031,6 +1032,7 @@ static void ui_draw_vision_header(UIState *s) {
   //ui_draw_vision_event(s);
   bb_ui_draw_UI(s);
   ui_draw_tpms(s);
+  ui_draw_extras(s);
 }
 
 static void ui_draw_vision_footer(UIState *s) {
