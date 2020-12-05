@@ -95,6 +95,9 @@ class CarState(CarStateBase):
     # TODO: Find brake pressure
     ret.brake = 0
     ret.brakePressed = cp.vl["TCS13"]['DriverBraking'] != 0
+    
+    #Autohold by Tenesi
+    self.brakeHold = cp.vl["ESP11"]['AVH_STAT']
 
     # TODO: Check this
     ret.brakeLights = bool(cp.vl["TCS13"]['BrakeLight'] or ret.brakePressed)
@@ -263,6 +266,8 @@ class CarState(CarStateBase):
       ("CF_Clu_CluInfo", "CLU11", 0),
       ("CF_Clu_AmpInfo", "CLU11", 0),
       ("CF_Clu_AliveCnt1", "CLU11", 0),
+      
+      ("AVH_STAT", "ESP11", 0),  # Autohold by Tenesi
 
       ("ACCEnable", "TCS13", 0),
       ("BrakeLight", "TCS13", 0),
