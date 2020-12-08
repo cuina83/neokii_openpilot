@@ -1,5 +1,5 @@
 import copy
-from random import randint
+import random
 import numpy as np
 from common.numpy_fast import clip, interp
 from cereal import car, log
@@ -14,13 +14,11 @@ from selfdrive.road_speed_limiter import road_speed_limiter_get_max_speed
 MIN_SET_SPEED = V_CRUISE_MIN
 MAX_SET_SPEED = V_CRUISE_MAX
 
-MAX_ACC_BUFFER_COUNT = 5
 LIMIT_ACCEL = 10.
 LIMIT_DECEL = 18.
 
-ALIVE_COUNT = [7, 6, 8]
-WAIT_COUNT = [12, 8, 15, 10, 13, 9, 11, 14]
-AliveIndex = 0
+ALIVE_COUNT = 8
+WAIT_COUNT = [10, 12, 14, 16]
 WaitIndex = 0
 
 EventName = car.CarEvent.EventName
@@ -36,15 +34,6 @@ class CruiseState:
   COUNT = 2
 
 class SccSmoother:
-
-  @staticmethod
-  def get_alive_count():
-    global AliveIndex
-    count = ALIVE_COUNT[AliveIndex]
-    AliveIndex += 1
-    if AliveIndex >= len(ALIVE_COUNT):
-      AliveIndex = 0
-    return count
 
   @staticmethod
   def get_wait_count():
@@ -71,7 +60,8 @@ class SccSmoother:
     self.alive_timer = 0
     self.btn = Buttons.NONE
 
-    self.alive_count = max(ALIVE_COUNT)
+    self.alive_count = ALIVE_COUNT
+    random.shuffle(WAIT_COUNT)
 
     self.path_x = np.arange(10)
     self.curve_speed = 0.
@@ -99,7 +89,7 @@ class SccSmoother:
     return packer.make_can_msg("CLU11", bus, values)
 
   def is_active(self, frame):
-    return frame - self.started_frame <= max(ALIVE_COUNT) + max(WAIT_COUNT)
+    return frame - self.started_frame <= ALIVE_COUNT + max(WAIT_COUNT)
 
   def dispatch_cancel_buttons(self, CC, CS):
     changed = False
@@ -166,7 +156,7 @@ class SccSmoother:
 
       CC.sccSmoother.logMessage = ''
       self.reset()
-      self.wait_timer = max(ALIVE_COUNT) + max(WAIT_COUNT)
+      self.wait_timer = ALIVE_COUNT + max(WAIT_COUNT)
       return
 
     current_set_speed = CS.cruiseState_speed * CV.MS_TO_KPH
@@ -195,7 +185,7 @@ class SccSmoother:
 
       if self.alive_timer == 0:
         self.btn = self.get_button(clu11_speed, current_set_speed)
-        self.alive_count = SccSmoother.get_alive_count()
+        self.alive_count = ALIVE_COUNT
 
       if self.btn != Buttons.NONE:
         can_sends.append(self.create_clu11(packer, self.alive_timer, CS.scc_bus, CS.clu11, self.btn))
@@ -262,18 +252,18 @@ class SccSmoother:
 
       d = lead.dRel - 5.
 
-      if 0. < d < -lead.vRel * (9. + cruise_gap) * 2. and lead.vRel < -1.:
-        t = d / lead.vRel
+      if 0. < d < -lead.vRel * (7.697 + cruise_gap) * 2. and lead.vRel < -1.:
+        t = d / lead.vRel * 0.98
         acc = -(lead.vRel / t) * CV.MS_TO_KPH * 1.8
         override_acc = acc
         accel = (op_accel + acc) / 2.
-      else:
-        accel = op_accel
+      else:        
+        accel = op_accel * interp(clu11_speed, [0., 20., 35., 50., 51., 60., 100.], [2.4, 3.2, 3.0, 1.7, 1.65, 1.4, 1.0])
 
     if accel > 0.:
-      accel *= self.accel_gain * interp(clu11_speed, [30., 100.], [1.5, 1.2])
+      accel *= self.accel_gain * interp(clu11_speed, [35., 60., 100.], [1.5, 1.25, 1.2])
     else:
-      accel *= self.decel_gain * 1.8
+      accel *= self.decel_gain * interp(clu11_speed, [70., 75.], [1.79285, 1.8])
 
     return clip(accel, -LIMIT_DECEL, LIMIT_ACCEL), override_acc
 
@@ -355,3 +345,5 @@ class SccSmoother:
       v_cruise_kph = clip(v_cruise_kph, MIN_SET_SPEED, MAX_SET_SPEED)
 
     return v_cruise_kph
+
+
