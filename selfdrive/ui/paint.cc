@@ -258,7 +258,7 @@ static void ui_draw_vision_lane_lines(UIState *s) {
     NVGcolor color = nvgRGBAf(1.0, 1.0, 1.0, scene->lane_line_probs[ll_idx]);
     ui_draw_line(s, (pvd_ll + ll_idx)->v, (pvd_ll + ll_idx)->cnt, &color, nullptr);
   }
-  
+
   // paint road edges
   line_vertices_data *pvd_re = &s->road_edge_vertices[0];
   for (int re_idx = 0; re_idx < 2; re_idx++) {
@@ -268,7 +268,7 @@ static void ui_draw_vision_lane_lines(UIState *s) {
     NVGcolor color = nvgRGBAf(1.0, 0.0, 0.0, std::clamp<float>(1.0-scene->road_edge_stds[re_idx], 0.0, 1.0));
     ui_draw_line(s, (pvd_re + re_idx)->v, (pvd_re + re_idx)->cnt, &color, nullptr);
   }
-  
+
   // paint path
   if(s->sm->updated("modelV2")) {
     update_track_data(s, scene->model.getPosition(), &s->track_vertices);
@@ -307,7 +307,7 @@ static void ui_draw_world(UIState *s) {
       draw_lead(s, scene->lead_data[1]);
     }
   //}
-  
+
   nvgRestore(s->vg);
 }
 
@@ -361,7 +361,7 @@ static void ui_draw_tpms(UIState *s) {
 
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
   const int pos_x = viz_tpms_x + (viz_tpms_w / 2);
-  ui_draw_text(s->vg, pos_x, 120, "TPMS", 60, COLOR_ORANGE_ALPHA(200), s->font_sans_bold);
+  ui_draw_text(s->vg, pos_x, 120, "TPMS", 55, COLOR_WHITE_ORANGE(200), s->font_sans_bold);
   snprintf(tpmsFl, sizeof(tpmsFl), "%.1f", s->scene.tpmsPressureFl);
   snprintf(tpmsFr, sizeof(tpmsFr), "%.1f", s->scene.tpmsPressureFr);
   snprintf(tpmsRl, sizeof(tpmsRl), "%.1f", s->scene.tpmsPressureRl);
@@ -403,10 +403,10 @@ static void ui_draw_debug(UIState *s)
   int ui_viz_rx = scene.viz_rect.x + 300;
   int ui_viz_ry = 108;
   int ui_viz_rx_center = scene.viz_rect.centerX();
-  
+
   nvgFontSize(s->vg, 70);
   nvgFontFace(s->vg, "sans-semibold");
-  nvgFillColor(s->vg, COLOR_WHITE_ALPHA(200));
+  nvgFillColor(s->vg, COLOR_WHITE_ALPHA(150));
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
   ui_print(s, ui_viz_rx_center, ui_viz_ry+650, "커브");
   if (scene.curvature >= 0.001) {
@@ -768,7 +768,8 @@ static void bb_ui_draw_debug(UIState *s)
 
     nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 
-    ui_draw_text(s->vg, x, y, str, 20 * 2.5, COLOR_WHITE_ALPHA(200), s->font_sans_semibold);
+    ui_draw_text(s->vg, x, y, str, 20 * 2.5, COLOR_WHITE_ALPHA(200), s->font_sans_semibold);  
+}
 
 
 static void bb_ui_draw_UI(UIState *s)
@@ -853,7 +854,7 @@ static void ui_draw_vision_maxspeed(UIState *s) {
 
     ui_draw_text(s->vg, text_x, 242, "N/A", 42 * 2.5, COLOR_WHITE_ALPHA(100), s->font_sans_semibold);
   }
-  ui_draw_debug(s);
+  ui_draw_debug(S);
 }
 
 static void ui_draw_vision_speed(UIState *s) {
@@ -896,7 +897,6 @@ static void ui_draw_vision_event(UIState *s) {
 
     ui_draw_circle_image(s->vg, bg_wheel_x, bg_wheel_y, bg_wheel_size, s->img_wheel, color, 1.0f, bg_wheel_y - 25);
   }
-  ui_draw_debug(s);
 }
 
 static void ui_draw_vision_face(UIState *s) {
@@ -959,7 +959,7 @@ static void ui_draw_driver_view(UIState *s) {
   ui_draw_circle_image(s->vg, x, y, face_size, s->img_face, scene->dmonitoring_state.getFaceDetected());
 }
 
-/*static void ui_draw_vision_brake(UIState *s) {
+static void ui_draw_vision_brake(UIState *s) {
   const UIScene *scene = &s->scene;
   const int brake_size = 96;
   const int brake_x = (s->scene.viz_rect.x + (brake_size * 4) + (bdr_is * 4));
@@ -984,7 +984,7 @@ static void ui_draw_driver_view(UIState *s) {
   nvgRect(s->vg, brake_img_x, brake_img_y, brake_img_size, brake_img_size);
   nvgFillPaint(s->vg, brake_img);
   nvgFill(s->vg);
-}*/
+}
 
 static void ui_draw_vision_header(UIState *s) {
   const Rect &viz_rect = s->scene.viz_rect;
@@ -999,8 +999,8 @@ static void ui_draw_vision_header(UIState *s) {
   ui_draw_vision_speed(s);
   //ui_draw_vision_event(s);
   bb_ui_draw_UI(s);
-  ui_draw_tpms(s);
-  ui_draw_extras(s);
+  ui_draw_tpms(S);
+  ui_draw_exras(s);
 }
 
 static void ui_draw_vision_footer(UIState *s) {
