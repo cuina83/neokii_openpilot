@@ -186,6 +186,19 @@ void update_sockets(UIState *s) {
    if (sm.updated("pathPlan"))
    {
     scene.path_plan = sm["pathPlan"].getPathPlan();
+    auto data = sm["pathPlan"].getPathPlan();
+
+    scene.pathPlan.laneWidth = data.getLaneWidth();
+    scene.pathPlan.cProb = data.getCProb();
+    scene.pathPlan.lProb = data.getLProb();
+    scene.pathPlan.rProb = data.getRProb();
+
+    auto l_list = data.getLPoly();
+    auto r_list = data.getRPoly();
+
+    scene.pathPlan.lPoly = l_list[3];
+    scene.pathPlan.rPoly = r_list[3];
+
    }
 
    if (sm.updated("gpsLocationExternal"))
