@@ -662,7 +662,8 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
 
   EventName.posenetInvalid: {
     ET.SOFT_DISABLE: SoftDisableAlert("차선인식상태가 좋지않으니 주의운전하세요"),
-    ET.NO_ENTRY: NoEntryAlert("차선인식상태가 좋지않으니 주의운전하세요"),
+    ET.NO_ENTRY: NoEntryAlert("차선인식상태가 좋지않으니 주의운전하세요",
+                              audible_alert=AudibleAlert.chimeVision),
   },
 
   EventName.deviceFalling: {
