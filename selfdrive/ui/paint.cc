@@ -361,7 +361,7 @@ static void ui_draw_tpms(UIState *s) {
 
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
   const int pos_x = viz_tpms_x + (viz_tpms_w / 2);
-  ui_draw_text(s->vg, pos_x, 120, "TPMS", 55, COLOR_WHITE_ORANGE(200), s->font_sans_bold);
+  ui_draw_text(s->vg, pos_x, 120, "TPMS", 60, COLOR_ORANGE_ALPHA(200), s->font_sans_bold);
   snprintf(tpmsFl, sizeof(tpmsFl), "%.1f", s->scene.tpmsPressureFl);
   snprintf(tpmsFr, sizeof(tpmsFr), "%.1f", s->scene.tpmsPressureFr);
   snprintf(tpmsRl, sizeof(tpmsRl), "%.1f", s->scene.tpmsPressureRl);
@@ -854,7 +854,7 @@ static void ui_draw_vision_maxspeed(UIState *s) {
 
     ui_draw_text(s->vg, text_x, 242, "N/A", 42 * 2.5, COLOR_WHITE_ALPHA(100), s->font_sans_semibold);
   }
-  ui_draw_debug(S);
+  ui_draw_debug(s);
 }
 
 static void ui_draw_vision_speed(UIState *s) {
@@ -999,8 +999,8 @@ static void ui_draw_vision_header(UIState *s) {
   ui_draw_vision_speed(s);
   //ui_draw_vision_event(s);
   bb_ui_draw_UI(s);
-  ui_draw_tpms(S);
-  ui_draw_exras(s);
+  ui_draw_tpms(s);
+  ui_draw_extras(s);
 }
 
 static void ui_draw_vision_footer(UIState *s) {
